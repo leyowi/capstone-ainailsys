@@ -1,0 +1,10 @@
+*.pth
+*.jpg
+*.jpeg
+*.png
+*.gif
+data/
+__pycache__/
+*.pyc
+venv/
+outputs/
