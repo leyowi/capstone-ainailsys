@@ -110,7 +110,11 @@ class AINAILSYSApp:
     def __init__(self, root):
         self.root = root
         self.root.title("AINAILSYS")
+        
+        # Set fullscreen BEFORE configuring anything else
         self.root.attributes('-fullscreen', True)
+        self.root.attributes('-topmost', True)  # Keep on top
+        
         self.root.configure(bg=COLOR_LIGHTEST)
         
         # Hidden exit: ESC 3 times
@@ -132,6 +136,9 @@ class AINAILSYSApp:
         self.show_preview_page()
         self.update_preview()
         print("AINAILSYS ready!")
+        
+        # Force fullscreen again after 100ms (ensures it sticks)
+        self.root.after(100, lambda: self.root.attributes('-fullscreen', True))
         
         # Startup announcement
         self.speak("System ready")
@@ -246,7 +253,7 @@ class AINAILSYSApp:
             relief=tk.RAISED,
             bd=4
         )
-        self.capture_btn.pack(pady=15)
+        self.capture_btn.pack(pady=13)
         
         # ==========================================
         # PAGE 2: RESULTS PAGE
