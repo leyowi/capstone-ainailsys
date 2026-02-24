@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-AINAILSYS - DEBUGGING VERSION
-Removed skin tone pre-filter - let AI decide everything
+AINAILSYS - FINAL PRODUCTION VERSION
+Complete system with voice announcements
 """
 
 import tkinter as tk
@@ -12,6 +12,9 @@ import numpy as np
 from pathlib import Path
 import json
 import traceback
+import subprocess
+import threading
+import os
 
 # ============================================
 # CONFIGURATION
@@ -42,11 +45,57 @@ DEFICIENCY_MAP = {
 }
 
 # ============================================
-# PREPROCESSING
+# IMAGE PROCESSING
 # ============================================
 
+def detect_nail_presence(image):
+    """
+    Binary image processing for nail detection
+    Stricter thresholds to prevent false positives
+    """
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+    _, binary = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    
+    white_pixels = np.sum(binary == 255)
+    total_pixels = binary.size
+    white_percentage = (white_pixels / total_pixels) * 100
+    
+    edges = cv2.Canny(gray, 50, 150)
+    edge_pixels = np.sum(edges > 0)
+    edge_percentage = (edge_pixels / total_pixels) * 100
+    
+    texture_var = gray.std()
+    brightness = gray.mean()
+    
+    print(f"\nNail Detection (Binary Image Processing):")
+    print(f"  White pixels: {white_percentage:.2f}%")
+    print(f"  Edge pixels: {edge_percentage:.2f}%")
+    print(f"  Texture variance: {texture_var:.2f}")
+    print(f"  Brightness: {brightness:.2f}")
+    
+    has_white = white_percentage > 30
+    has_edges = edge_percentage > 1.2
+    has_texture = texture_var > 20
+    not_overexposed = brightness < 200
+    
+    has_nail = has_white and has_edges and has_texture and not_overexposed
+    
+    print(f"\nValidation:")
+    print(f"  White > 30%: {has_white}")
+    print(f"  Edges > 1.2%: {has_edges}")
+    print(f"  Texture > 20: {has_texture}")
+    print(f"  Brightness < 200: {not_overexposed}")
+    
+    if has_nail:
+        print(f"  ✅ NAIL DETECTED")
+    else:
+        print(f"  ❌ NO NAIL")
+    
+    return has_nail
+
 def preprocess_image(image):
-    """Preprocess for inference"""
+    """Preprocess for AI inference"""
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     image_resized = cv2.resize(image_rgb, (224, 224))
     image_float = image_resized.astype(np.float32) / 255.0
@@ -87,6 +136,8 @@ class AINAILSYSApp:
         self.show_preview_page()
         self.update_preview()
         print("AINAILSYS ready!")
+        print("\n🔊 Testing speaker on startup...")
+        self.speak("System ready")
     
     def handle_escape(self, event):
         """Hidden exit - press ESC 3 times"""
@@ -96,6 +147,39 @@ class AINAILSYSApp:
             print("Exiting...")
             self.exit_app()
         self.root.after(2000, lambda: setattr(self, 'esc_count', 0))
+        
+    def speak(self, text):
+        """
+        Text-to-speech in background thread
+        Doesn't block UI - speaks WHILE showing results
+        """
+        def speak_in_background():
+            try:
+                print(f"🔊 Speaking: {text}")
+                
+                # Add leading pauses
+                fixed_text = ". . . ." + text
+                
+                # Set USB audio device
+                env = os.environ.copy()
+                env['AUDIODEV'] = 'hw:2,0'
+                
+                # Run espeak
+                subprocess.run(
+                    ['espeak', fixed_text, '-ven+f3', '-s', '150', '-a', '200', '-g', '5'],
+                    env=env,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL
+                )
+                
+                print(f"✅ Speech completed")
+                
+            except:
+                print(f"❌ Speech failed")
+        
+        # Run in background thread (non-blocking)
+        thread = threading.Thread(target=speak_in_background, daemon=True)
+        thread.start()
     
     def load_models(self):
         """Load models"""
@@ -120,10 +204,7 @@ class AINAILSYSApp:
     def setup_ui(self):
         """Create UI"""
         
-        # ==========================================
-        # PAGE 1: PREVIEW PAGE
-        # ==========================================
-        
+        # PAGE 1: PREVIEW
         self.preview_page = tk.Frame(self.root, bg=COLOR_LIGHTEST)
         
         tk.Label(
@@ -172,10 +253,7 @@ class AINAILSYSApp:
         )
         self.capture_btn.pack(pady=15)
         
-        # ==========================================
-        # PAGE 2: RESULTS PAGE
-        # ==========================================
-        
+        # PAGE 2: RESULTS
         self.results_page = tk.Frame(self.root, bg=COLOR_LIGHTEST)
         
         tk.Label(
@@ -249,7 +327,7 @@ class AINAILSYSApp:
         self.root.after(30, self.update_preview)
     
     def capture_and_analyze(self):
-        """Capture and analyze - TRUST THE AI"""
+        """Capture and analyze"""
         if self.current_frame is None:
             print("No frame captured!")
             return
@@ -263,44 +341,37 @@ class AINAILSYSApp:
             print("ANALYSIS STARTING")
             print("="*50)
             
-            # NO PRE-FILTERING - Let AI decide!
-            print("Running AI inference...")
-            results = self.analyze_image(self.current_frame)
+            # Binary preprocessing
+            has_nail = detect_nail_presence(self.current_frame)
             
-            # Check AI confidence
-            stage1_confidence = results['stage1']['confidence']
-            probs = results['stage1']['probabilities']
-            
-            print(f"\nSTAGE 1 RESULTS:")
-            print(f"  Prediction: {results['stage1']['prediction'].upper()}")
-            print(f"  Confidence: {stage1_confidence:.2%}")
-            print(f"  Probabilities:")
-            for name, prob in probs.items():
-                print(f"    - {name}: {prob:.2%}")
-            
-            if results['stage1']['prediction'] == 'anemic' and 'stage2' in results:
-                stage2 = results['stage2']
-                print(f"\nSTAGE 2 RESULTS:")
-                print(f"  Abnormality: {stage2['abnormality']}")
-                print(f"  Deficiency: {stage2['deficiency']}")
-                print(f"  Confidence: {stage2['confidence']:.2%}")
-            
-            prob_values = list(probs.values())
-            prob_diff = abs(prob_values[0] - prob_values[1])
-            print(f"\nProbability difference: {prob_diff:.2%}")
-            
-            # Relaxed validation: 70% confidence OR 40% difference
-            if stage1_confidence < 0.70 and prob_diff < 0.40:
-                print("DECISION: Confidence too low - rejecting")
+            if not has_nail:
+                print("\n🚫 NO NAIL DETECTED")
                 self.display_no_nail_result()
             else:
-                print("DECISION: Confidence acceptable - showing results")
+                print("\nRunning AI classification...")
+                results = self.analyze_image(self.current_frame)
+                
+                stage1_confidence = results['stage1']['confidence']
+                probs = results['stage1']['probabilities']
+                prediction = results['stage1']['prediction']
+                
+                print(f"\nSTAGE 1 RESULTS:")
+                print(f"  Prediction: {prediction.upper()}")
+                print(f"  Confidence: {stage1_confidence:.2%}")
+                
+                if prediction == 'anemic' and 'stage2' in results:
+                    stage2 = results['stage2']
+                    print(f"\nSTAGE 2 RESULTS:")
+                    print(f"  Abnormality: {stage2['abnormality']}")
+                    print(f"  Deficiency: {stage2['deficiency']}")
+                    print(f"  Confidence: {stage2['confidence']:.2%}")
+                
                 self.display_results(results)
             
             print("="*50 + "\n")
         
         except Exception as e:
-            print(f"\nERROR during analysis: {e}")
+            print(f"\nERROR: {e}")
             traceback.print_exc()
             self.display_error_result(str(e))
         
@@ -373,7 +444,7 @@ class AINAILSYSApp:
         
         tk.Label(
             self.results_content,
-            text="Unable to detect fingernail",
+            text="Unable to detect fingernail\nin the image",
             font=("Arial", 12),
             bg=COLOR_LIGHT,
             fg=COLOR_TEXT_DARK,
@@ -382,12 +453,15 @@ class AINAILSYSApp:
         
         tk.Label(
             self.results_content,
-            text="Ensure:\n• Nail is visible\n• Good lighting\n• Nail in focus",
+            text="Please ensure:\n• Fingernail is visible\n• Good lighting\n• Nail in focus",
             font=("Arial", 10),
             bg=COLOR_LIGHT,
             fg=COLOR_TEXT_DARK,
             justify=tk.CENTER
         ).pack(pady=10)
+        
+        # Speak announcement
+        self.speak("No nail detected. Please position fingernail and try again.")
     
     def display_error_result(self, error):
         """Display error"""
@@ -412,7 +486,7 @@ class AINAILSYSApp:
         ).pack(pady=10)
     
     def display_results(self, results):
-        """Display results - COMPACT"""
+        """Display results"""
         for widget in self.results_content.winfo_children():
             widget.destroy()
         
@@ -443,9 +517,12 @@ class AINAILSYSApp:
                 bg=COLOR_LIGHT,
                 fg=COLOR_BLUE
             ).pack(pady=8)
+            
+            # Speak announcement
+            self.speak("Healthy. No signs of anemia detected.")
         
         else:
-            # ANEMIC - COMPACT
+            # ANEMIC
             tk.Label(
                 self.results_content,
                 text="ANEMIC",
@@ -480,6 +557,13 @@ class AINAILSYSApp:
                     bg=COLOR_LIGHT,
                     fg=COLOR_BLUE
                 ).pack(pady=4)
+                
+                # Speak announcement
+                abnormality = stage2['abnormality'].replace('_', ' ')
+                deficiency = stage2['deficiency']
+                self.speak(f"Anemic. {abnormality} detected. {deficiency} deficiency.")
+            else:
+                self.speak("Anemic detected.")
             
             tk.Label(
                 self.results_content,
@@ -491,7 +575,7 @@ class AINAILSYSApp:
             ).pack(pady=8)
     
     def exit_app(self):
-        """Exit application"""
+        """Exit"""
         print("Exiting AINAILSYS...")
         try:
             if self.cap:
@@ -501,6 +585,10 @@ class AINAILSYSApp:
             pass
         finally:
             self.root.destroy()
+
+# ============================================
+# MAIN
+# ============================================
 
 def main():
     root = tk.Tk()
