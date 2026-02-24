@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 AINAILSYS - FINAL PRODUCTION VERSION
-Complete system with voice announcements
+Complete system with voice announcements and safe shutdown
 """
 
 import tkinter as tk
@@ -36,6 +36,7 @@ COLOR_PALE_BLUE = "#CBDCEB"
 COLOR_TEXT_DARK = "#2C3E50"
 COLOR_WARNING = "#d63031"
 COLOR_SUCCESS = "#00b894"
+COLOR_MID = "#697565"
 
 # Deficiency mapping
 DEFICIENCY_MAP = {
@@ -51,7 +52,6 @@ DEFICIENCY_MAP = {
 def detect_nail_presence(image):
     """
     Binary image processing for nail detection
-    Stricter thresholds to prevent false positives
     """
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -136,7 +136,8 @@ class AINAILSYSApp:
         self.show_preview_page()
         self.update_preview()
         print("AINAILSYS ready!")
-        print("\n🔊 Testing speaker on startup...")
+        
+        # Startup announcement
         self.speak("System ready")
     
     def handle_escape(self, event):
@@ -147,17 +148,16 @@ class AINAILSYSApp:
             print("Exiting...")
             self.exit_app()
         self.root.after(2000, lambda: setattr(self, 'esc_count', 0))
-        
+    
     def speak(self, text):
         """
         Text-to-speech in background thread
-        Doesn't block UI - speaks WHILE showing results
         """
         def speak_in_background():
             try:
                 print(f"🔊 Speaking: {text}")
                 
-                # Add leading pauses
+                # Add leading pauses to prevent clipping
                 fixed_text = ". . . ." + text
                 
                 # Set USB audio device
@@ -204,7 +204,10 @@ class AINAILSYSApp:
     def setup_ui(self):
         """Create UI"""
         
-        # PAGE 1: PREVIEW
+        # ==========================================
+        # PAGE 1: PREVIEW PAGE
+        # ==========================================
+        
         self.preview_page = tk.Frame(self.root, bg=COLOR_LIGHTEST)
         
         tk.Label(
@@ -253,7 +256,10 @@ class AINAILSYSApp:
         )
         self.capture_btn.pack(pady=15)
         
-        # PAGE 2: RESULTS
+        # ==========================================
+        # PAGE 2: RESULTS PAGE
+        # ==========================================
+        
         self.results_page = tk.Frame(self.root, bg=COLOR_LIGHTEST)
         
         tk.Label(
@@ -278,6 +284,7 @@ class AINAILSYSApp:
         self.results_content = tk.Frame(results_container, bg=COLOR_LIGHT)
         self.results_content.pack(fill=tk.BOTH, expand=True, padx=20, pady=5)
         
+        # NEW SCAN button
         tk.Button(
             self.results_page,
             text="NEW SCAN",
@@ -290,7 +297,24 @@ class AINAILSYSApp:
             width=20,
             relief=tk.RAISED,
             bd=4
-        ).pack(pady=15)
+        ).pack(pady=10)
+        
+        # POWER OFF button
+        power_off_btn = tk.Button(
+            self.results_page,
+            text="POWER OFF",
+            font=("Arial", 10, "bold"),
+            bg=COLOR_WARNING,
+            fg="white",
+            activebackground="#c0392b",
+            command=self.shutdown_system,
+            height=1,
+            width=10,  # Reduced from 15
+            relief=tk.RAISED,
+            bd=3
+        )
+        # Position in lower right corner with padding
+        power_off_btn.place(relx=1.0, rely=1.0, x=-20, y=-20, anchor="se")
     
     def show_preview_page(self):
         """Show preview page"""
@@ -352,7 +376,6 @@ class AINAILSYSApp:
                 results = self.analyze_image(self.current_frame)
                 
                 stage1_confidence = results['stage1']['confidence']
-                probs = results['stage1']['probabilities']
                 prediction = results['stage1']['prediction']
                 
                 print(f"\nSTAGE 1 RESULTS:")
@@ -460,7 +483,7 @@ class AINAILSYSApp:
             justify=tk.CENTER
         ).pack(pady=10)
         
-        # Speak announcement
+        # Voice announcement
         self.speak("No nail detected. Please position fingernail and try again.")
     
     def display_error_result(self, error):
@@ -518,7 +541,7 @@ class AINAILSYSApp:
                 fg=COLOR_BLUE
             ).pack(pady=8)
             
-            # Speak announcement
+            # Voice announcement
             self.speak("Healthy. No signs of anemia detected.")
         
         else:
@@ -558,12 +581,10 @@ class AINAILSYSApp:
                     fg=COLOR_BLUE
                 ).pack(pady=4)
                 
-                # Speak announcement
+                # Voice announcement
                 abnormality = stage2['abnormality'].replace('_', ' ')
                 deficiency = stage2['deficiency']
                 self.speak(f"Anemic. {abnormality} detected. {deficiency} deficiency.")
-            else:
-                self.speak("Anemic detected.")
             
             tk.Label(
                 self.results_content,
@@ -574,8 +595,108 @@ class AINAILSYSApp:
                 justify=tk.CENTER
             ).pack(pady=8)
     
+    def shutdown_system(self):
+        """Show shutdown confirmation dialog"""
+        # Create confirmation popup
+        confirm = tk.Toplevel(self.root)
+        confirm.title("Power Off")
+        confirm.geometry("450x250")
+        confirm.configure(bg=COLOR_LIGHT)
+        
+        # Center the popup
+        confirm.transient(self.root)
+        confirm.grab_set()
+        
+        # Warning message
+        tk.Label(
+            confirm,
+            text="POWER OFF DEVICE?",
+            font=("Arial", 18, "bold"),
+            bg=COLOR_LIGHT,
+            fg=COLOR_WARNING
+        ).pack(pady=20)
+        
+        tk.Label(
+            confirm,
+            text="This will shut down the system.\nWait 30 seconds before unplugging.",
+            font=("Arial", 11),
+            bg=COLOR_LIGHT,
+            fg=COLOR_TEXT_DARK,
+            justify=tk.CENTER
+        ).pack(pady=10)
+        
+        # Buttons
+        btn_frame = tk.Frame(confirm, bg=COLOR_LIGHT)
+        btn_frame.pack(pady=20)
+        
+        tk.Button(
+            btn_frame,
+            text="YES, POWER OFF",
+            font=("Arial", 13, "bold"),
+            bg=COLOR_WARNING,
+            fg="white",
+            command=lambda: self.do_shutdown(confirm),
+            width=16,
+            height=2,
+            relief=tk.RAISED,
+            bd=3
+        ).pack(side=tk.LEFT, padx=10)
+        
+        tk.Button(
+            btn_frame,
+            text="CANCEL",
+            font=("Arial", 13, "bold"),
+            bg=COLOR_MID,
+            fg="white",
+            command=confirm.destroy,
+            width=12,
+            height=2,
+            relief=tk.RAISED,
+            bd=3
+        ).pack(side=tk.LEFT, padx=10)
+    
+    def do_shutdown(self, confirm_window):
+        """Execute system shutdown"""
+        print("Shutting down system...")
+        
+        # Close confirmation window
+        confirm_window.destroy()
+        
+        # Show shutdown message
+        for widget in self.results_content.winfo_children():
+            widget.destroy()
+        
+        tk.Label(
+            self.results_content,
+            text="POWERING OFF...",
+            font=("Arial", 24, "bold"),
+            bg=COLOR_LIGHT,
+            fg=COLOR_WARNING
+        ).pack(pady=30)
+        
+        tk.Label(
+            self.results_content,
+            text="Please wait 30 seconds\nbefore unplugging power",
+            font=("Arial", 14),
+            bg=COLOR_LIGHT,
+            fg=COLOR_TEXT_DARK,
+            justify=tk.CENTER
+        ).pack(pady=20)
+        
+        self.root.update()
+        
+        # Voice announcement
+        self.speak("Powering off.")
+        
+        # Release camera
+        if self.cap:
+            self.cap.release()
+        
+        # Small delay for voice to start, then shutdown
+        self.root.after(2000, lambda: subprocess.run(['sudo', 'shutdown', 'now']))
+    
     def exit_app(self):
-        """Exit"""
+        """Exit (hidden ESC 3x)"""
         print("Exiting AINAILSYS...")
         try:
             if self.cap:
