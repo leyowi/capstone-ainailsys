@@ -16,10 +16,6 @@ import subprocess
 import threading
 import os
 
-# ============================================
-# CONFIGURATION
-# ============================================
-
 MODEL_DIR = Path.home() / "capstone" / "models"
 STAGE1_MODEL = MODEL_DIR / "stage1_binary.onnx"
 STAGE2_MODEL = MODEL_DIR / "stage2_multiclass.onnx"
@@ -166,7 +162,7 @@ class AINAILSYSApp:
                 
                 # Run espeak
                 subprocess.run(
-                    ['espeak', fixed_text, '-ven+f3', '-s', '150', '-a', '200', '-g', '5'],
+                    ['espeak', fixed_text, '-ven+f3', '-s', '130', '-a', '200', '-g', '10'],
                     env=env,
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL
@@ -209,48 +205,44 @@ class AINAILSYSApp:
         # ==========================================
         
         self.preview_page = tk.Frame(self.root, bg=COLOR_LIGHTEST)
-        
+
+        # Title
         tk.Label(
             self.preview_page,
             text="AINAILSYS",
-            font=("Arial", 20, "bold"),
+            font=("Arial", 30, "bold"),
             bg=COLOR_LIGHTEST,
             fg=COLOR_BLUE
         ).pack(pady=5)
-        
-        tk.Label(
-            self.preview_page,
-            text="Anemia Detection System",
-            font=("Arial", 10),
-            bg=COLOR_LIGHTEST,
-            fg=COLOR_TEXT_DARK
-        ).pack(pady=2)
-        
-        preview_frame = tk.Frame(self.preview_page, bg=COLOR_LIGHT, relief=tk.RAISED, bd=2)
-        preview_frame.pack(pady=10, padx=20)
-        
-        self.camera_label = tk.Label(preview_frame, bg=COLOR_LIGHT)
-        self.camera_label.pack(padx=3, pady=3)
-        
+
+        # Instruction - moved up, same size
         tk.Label(
             self.preview_page,
             text="Position fingernail clearly in camera view",
             font=("Arial", 10),
             bg=COLOR_LIGHTEST,
             fg=COLOR_TEXT_DARK
-        ).pack(pady=5)
-        
+        ).pack(pady=2)
+
+        # Camera preview frame
+        preview_frame = tk.Frame(self.preview_page, bg=COLOR_LIGHT, relief=tk.RAISED, bd=2)
+        preview_frame.pack(pady=10, padx=20)
+
+        self.camera_label = tk.Label(preview_frame, bg=COLOR_LIGHT)
+        self.camera_label.pack(padx=3, pady=3)
+
+        # CAPTURE button - EXACT MATCH to NEW SCAN button
         self.capture_btn = tk.Button(
             self.preview_page,
             text="CAPTURE & ANALYZE",
-            font=("Arial", 18, "bold"),
+            font=("Arial", 16, "bold"),
             bg=COLOR_BLUE,
             fg="white",
             activebackground=COLOR_PALE_BLUE,
             activeforeground=COLOR_TEXT_DARK,
             command=self.capture_and_analyze,
             height=2,
-            width=22,
+            width=20,
             relief=tk.RAISED,
             bd=4
         )
@@ -265,7 +257,7 @@ class AINAILSYSApp:
         tk.Label(
             self.results_page,
             text="AINAILSYS",
-            font=("Arial", 20, "bold"),
+            font=("Arial", 30, "bold"),
             bg=COLOR_LIGHTEST,
             fg=COLOR_BLUE
         ).pack(pady=8)
@@ -275,7 +267,7 @@ class AINAILSYSApp:
         
         tk.Label(
             results_container,
-            text="ANALYSIS RESULTS",
+            text="RESULTS",
             font=("Arial", 16, "bold"),
             bg=COLOR_LIGHT,
             fg=COLOR_BLUE
@@ -542,7 +534,7 @@ class AINAILSYSApp:
             ).pack(pady=8)
             
             # Voice announcement
-            self.speak("Healthy. No signs of anemia detected.")
+            self.speak("Healthy Nail. No signs of anemia detected.")
         
         else:
             # ANEMIC
@@ -584,7 +576,7 @@ class AINAILSYSApp:
                 # Voice announcement
                 abnormality = stage2['abnormality'].replace('_', ' ')
                 deficiency = stage2['deficiency']
-                self.speak(f"Anemic. {abnormality} detected. {deficiency} deficiency.")
+                self.speak(f"Anemic {abnormality} nail detected. {deficiency} deficiency.")
             
             tk.Label(
                 self.results_content,
