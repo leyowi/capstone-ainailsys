@@ -8,3 +8,8 @@ __pycache__/
 *.pyc
 venv/
 outputs/
+
+desktop.ini
+AINailsys-Final-Manuscript.pdf
+raspberry_pi/database/patient_records.csv
+*.tex
