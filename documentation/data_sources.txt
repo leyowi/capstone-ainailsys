@@ -1,0 +1,73 @@
+================================================================================
+AINAILSYS - DATA SOURCES
+================================================================================
+
+DATASET SUMMARY:
+Total Images: 2,675
+- Healthy: 685
+- Anemic: 1,990
+  - Iron deficiency: 678 (spooning, onycholysis, onychorrhexis)
+  - Folate deficiency: 650 (beau's lines, onychoschizia)
+  - B12 deficiency: 662 (melanonychia, blue nails)
+
+================================================================================
+SOURCES
+================================================================================
+
+HEALTHY NAILS:
+- Kaggle: Nail Disease Image Classification Dataset
+  https://www.kaggle.com/datasets/josephrasanjana/nail-disease-image-classification-dataset
+- Roboflow: Nail Disease Classification
+  https://universe.roboflow.com/mohit-fc0fl/nail-disease-classification-f7gwn/dataset/1
+
+IRON DEFICIENCY:
+
+Spooning (Koilonychia):
+- Roboflow: Koilonychia Dataset
+  https://universe.roboflow.com/mist-r9pt1/koilonychia-u7h8v/dataset/3
+
+Onycholysis:
+- Roboflow: Nail Disease Classification
+  https://universe.roboflow.com/taschenbier/naildiseaseclf/dataset/2
+- Roboflow: Nail Disease Classification
+  https://universe.roboflow.com/mohit-fc0fl/nail-disease-classification-f7gwn/dataset/1
+
+Onychorrhexis:
+- Google Images
+
+FOLATE DEFICIENCY:
+
+Beau's Lines:
+- Roboflow: Beau's Lines Nails Dataset
+  https://universe.roboflow.com/myworkspace-bliu9/beaus-lines-nails/dataset/6
+- Kaggle: Nail Dataset Disease
+  https://www.kaggle.com/datasets/naeun1/nail-dataset-disease
+
+Onychoschizia:
+- Google Images
+
+B12 DEFICIENCY:
+
+Melanonychia:
+- Kaggle: Nail Dataset Disease
+  https://www.kaggle.com/datasets/naeun1/nail-dataset-disease
+- Roboflow: Nail Disease Classification
+  https://universe.roboflow.com/taschenbier/naildiseaseclf/dataset/2
+
+Blue Nails:
+- Kaggle: Nail Dataset Disease
+  https://www.kaggle.com/datasets/naeun1/nail-dataset-disease
+- Roboflow: Nail Disease Classification
+  https://universe.roboflow.com/mohit-fc0fl/nail-disease-classification-f7gwn/dataset/1
+
+================================================================================
+ETHICAL COMPLIANCE
+================================================================================
+
+Self-captured images were collected using a web camera with proper:
+- Informed consent from participants
+- Institutional ethical clearance
+- Privacy protection measures
+- Data anonymization
+
+All public datasets used are licensed for academic/research purposes.
