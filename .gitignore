@@ -8,6 +8,7 @@ __pycache__/
 *.pyc
 venv/
 outputs/
+publish/
 
 desktop.ini
 AINailsys-Final-Manuscript.pdf
