@@ -3,6 +3,7 @@
 *.jpeg
 *.png
 *.gif
+*.tex
 data/
 __pycache__/
 *.pyc
@@ -13,4 +14,3 @@ publish/
 desktop.ini
 AINailsys-Final-Manuscript.pdf
 raspberry_pi/database/patient_records.csv
-*.tex

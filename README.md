@@ -7,11 +7,11 @@
 
 An AI-powered system for non-invasive anemia detection through fingernail image analysis, deployed on Raspberry Pi 5 for portable, accessible healthcare screening.
 
-## 🎯 Project Overview
+## Project Overview
 
 AINAILSYS uses deep learning to detect anemia and identify specific nutrient deficiencies (Iron, Folate, B12) by analyzing fingernail images. The system achieves 97.45% accuracy in deficiency type classification and runs entirely on edge hardware, making it suitable for resource-limited settings.
 
-## ✨ Key Features
+## Key Features
 
 - **Two-Stage Architecture**: Binary classification (Healthy/Anemic) followed by multi-class abnormality detection
 - **High Accuracy**: 98.41% Stage 1, 96.43% Stage 2, 97.45% deficiency detection
@@ -20,7 +20,7 @@ AINAILSYS uses deep learning to detect anemia and identify specific nutrient def
 - **Portable**: Standalone device with 7" touchscreen interface
 - **No Internet Required**: Fully offline operation
 
-## 🏗️ System Architecture
+## System Architecture
 ```
 ┌─────────────────┐
 │  Camera Input   │
@@ -43,7 +43,7 @@ AINAILSYS uses deep learning to detect anemia and identify specific nutrient def
     └─────────────────┘
 ```
 
-## 📊 Performance Metrics
+## Performance Metrics
 
 | Metric | Stage 1 | Stage 2 | Deficiency |
 |--------|---------|---------|------------|
@@ -60,7 +60,7 @@ AINAILSYS uses deep learning to detect anemia and identify specific nutrient def
 - Beau's Lines: 94.44%
 - Spooning: 91.57%
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Training
 - **Framework**: PyTorch 2.x
@@ -75,7 +75,7 @@ AINAILSYS uses deep learning to detect anemia and identify specific nutrient def
 - **Runtime**: ONNX Runtime
 - **Interface**: Python Tkinter GUI
 
-## 📁 Project Structure
+## Project Structure
 ```
 ainailsys/
 ├── data/                   # Dataset organization
@@ -86,7 +86,7 @@ ainailsys/
 └── outputs/               # Results & visualizations
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Training (PC)
 ```bash
@@ -117,13 +117,13 @@ scp models/deployment/*.onnx pi@raspberrypi.local:~/ainailsys/models/
 python3 raspberry_pi/ainailsys_gui.py
 ```
 
-## 🎓 Research Context
+## Research Context
 
 This project was developed as a thesis for Polytechnic University of the Philippines, Bachelor of Science in Electronics Engineering. The goal is to create an accessible, affordable anemia screening tool for use in resource-limited healthcare settings.
 
 **Academic Year**: 2025-2026
 
-## 📊 Dataset
+## Dataset
 
 - **Total Images**: 4,585 (after augmentation)
 - **Original Images**: 2,675
@@ -131,7 +131,7 @@ This project was developed as a thesis for Polytechnic University of the Philipp
 - **Split**: 70% train, 15% validation, 15% test
 - **Augmentation**: Rotation, flip, color jitter, affine transforms
 
-## 🔬 Future Work
+## Future Work
 
 - [ ] Integrate object detection for improved nail localization
 - [ ] Expand dataset with more diverse skin tones
@@ -139,11 +139,11 @@ This project was developed as a thesis for Polytechnic University of the Philipp
 - [ ] Develop mobile app version (Android/iOS)
 - [ ] Clinical validation study with dermatologists
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - ResNet18 architecture from [PyTorch torchvision](https://pytorch.org/vision/stable/models.html)
 - Dataset sourced from [Kaggle](https://www.kaggle.com/) and [Roboflow](https://roboflow.com/)
