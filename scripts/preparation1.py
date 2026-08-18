@@ -81,19 +81,19 @@ def prepare_stage1_data(src, dst):
     src = Path(src)
     dst = Path(dst)
     
-    print("🔄 Preparing Stage 1 binary classification data...")
+    print(" Preparing Stage 1 binary classification data...")
     print("=" * 80)
     
     all_stats = {}
     
     for split in ['train', 'val', 'test']:
-        print(f"\n📂 Processing {split.upper()} split:")
+        print(f"\n Processing {split.upper()} split:")
         
         src_split = src / split
         dst_split = dst / split
         
         if not src_split.exists():
-            print(f"   ⚠️  {split} folder not found, skipping")
+            print(f"     {split} folder not found, skipping")
             continue
         
         stats = combine_anemic_classes(src_split, dst_split)
@@ -108,11 +108,11 @@ def prepare_stage1_data(src, dst):
 
 if __name__ == "__main__":
     print("=" * 80)
-    print("🔄 AINAILSYS - PREPARE STAGE 1 DATA (BINARY)")
+    print(" AINAILSYS - PREPARE STAGE 1 DATA (BINARY)")
     print("=" * 80)
     print()
     
-    print("⚙️  Configuration:")
+    print("  Configuration:")
     print(f"   Source:      {SOURCE}")
     print(f"   Destination: {DESTINATION}")
     print(f"   Classes:")
@@ -122,14 +122,14 @@ if __name__ == "__main__":
     
     # Check if destination exists
     if DESTINATION.exists() and any(DESTINATION.iterdir()):
-        print("⚠️  Stage 1 data folder already exists")
+        print("  Stage 1 data folder already exists")
         response = input("Do you want to recreate it? (yes/no): ").strip().lower()
         
         if response != 'yes':
-            print("❌ Operation cancelled.")
+            print(" Operation cancelled.")
             exit()
         
-        print("🗑️  Removing old data...")
+        print("  Removing old data...")
         shutil.rmtree(DESTINATION)
         print("   ✓ Removed\n")
     
@@ -138,10 +138,10 @@ if __name__ == "__main__":
     
     # Summary
     print("\n" + "=" * 80)
-    print("✅ STAGE 1 DATA READY!")
+    print(" STAGE 1 DATA READY!")
     print("=" * 80)
     
-    print("\n📊 Summary:")
+    print("\n Summary:")
     for split, split_stats in stats.items():
         total = split_stats['healthy'] + split_stats['anemic']
         healthy_pct = (split_stats['healthy'] / total * 100) if total > 0 else 0
@@ -152,7 +152,7 @@ if __name__ == "__main__":
         print(f"      Anemic:  {split_stats['anemic']:4} images ({anemic_pct:.1f}%)")
         print(f"      Total:   {total:4} images")
     
-    print("\n💡 Data structure created:")
+    print("\n Data structure created:")
     print(f"   {DESTINATION / 'train' / 'healthy'}")
     print(f"   {DESTINATION / 'train' / 'anemic'}")
     print(f"   {DESTINATION / 'val' / 'healthy'}")

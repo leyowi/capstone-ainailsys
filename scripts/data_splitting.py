@@ -76,7 +76,7 @@ def create_splits(src, dst, train_ratio, val_ratio, test_ratio, seed=42):
         'total': defaultdict(int)
     }
     
-    print("📊 Creating train/validation/test splits...")
+    print("Creating train/validation/test splits...")
     print("=" * 80)
     
     # Process each class
@@ -85,14 +85,14 @@ def create_splits(src, dst, train_ratio, val_ratio, test_ratio, seed=42):
             continue
         
         class_name = class_folder.name
-        print(f"\n📁 Processing: {class_name}")
+        print(f"\nProcessing: {class_name}")
         
         # Get all images
         all_images = list(class_folder.glob('*.jpg'))
         total_count = len(all_images)
         
         if total_count == 0:
-            print(f"   ⚠️  No images found, skipping")
+            print(f"   No images found, skipping")
             continue
         
         print(f"   Total images: {total_count}")
@@ -155,7 +155,7 @@ def verify_splits(dst):
     """
     dst = Path(dst)
     
-    print("\n🔍 Verifying splits...")
+    print("\nVerifying splits...")
     print("=" * 80)
     
     results = {}
@@ -164,10 +164,10 @@ def verify_splits(dst):
         split_path = dst / split
         
         if not split_path.exists():
-            print(f"⚠️  {split}/ folder not found")
+            print(f"{split}/ folder not found")
             continue
         
-        print(f"\n📂 {split.upper()}:")
+        print(f"\n{split.upper()}:")
         print("-" * 80)
         
         split_total = 0
@@ -201,7 +201,7 @@ def print_summary(stats, verify_results):
         verify_results: Verification results
     """
     print("\n" + "=" * 80)
-    print("📊 SPLIT SUMMARY")
+    print("SPLIT SUMMARY")
     print("=" * 80)
     
     # Overall totals
@@ -210,7 +210,7 @@ def print_summary(stats, verify_results):
     test_total = verify_results['test']['total']
     grand_total = train_total + val_total + test_total
     
-    print(f"\n🔢 Overall Distribution:")
+    print(f"\nOverall Distribution:")
     print(f"   Train:      {train_total:4} images ({train_total/grand_total*100:.1f}%)")
     print(f"   Validation: {val_total:4} images ({val_total/grand_total*100:.1f}%)")
     print(f"   Test:       {test_total:4} images ({test_total/grand_total*100:.1f}%)")
@@ -218,7 +218,7 @@ def print_summary(stats, verify_results):
     print(f"   TOTAL:      {grand_total:4} images")
     
     # Per-class distribution
-    print(f"\n📋 Per-Class Distribution:")
+    print(f"\nPer-Class Distribution:")
     print("-" * 80)
     print(f"   {'Class':<15} {'Train':<8} {'Val':<8} {'Test':<8} {'Total':<8}")
     print("-" * 80)
@@ -236,12 +236,12 @@ def print_summary(stats, verify_results):
 
 if __name__ == "__main__":
     print("=" * 80)
-    print("📊 AINAILSYS - CREATE DATA SPLITS")
+    print("AINAILSYS - CREATE DATA SPLITS")
     print("=" * 80)
     print()
     
     # Show configuration
-    print("⚙️  Configuration:")
+    print("Configuration:")
     print(f"   Source:      {SOURCE}")
     print(f"   Destination: {DESTINATION}")
     print(f"   Split ratio: {TRAIN_RATIO:.0%} train / {VAL_RATIO:.0%} val / {TEST_RATIO:.0%} test")
@@ -250,14 +250,14 @@ if __name__ == "__main__":
     
     # Check if splits exist
     if (DESTINATION / 'train').exists():
-        print("⚠️  Splits folder already exists")
+        print("Splits folder already exists")
         response = input("Do you want to recreate splits? (yes/no): ").strip().lower()
         
         if response != 'yes':
-            print("❌ Operation cancelled.")
+            print("Operation cancelled.")
             exit()
         
-        print("🗑️  Removing old splits...")
+        print("Removing old splits...")
         shutil.rmtree(DESTINATION)
         print("   ✓ Old splits removed\n")
     
@@ -279,10 +279,10 @@ if __name__ == "__main__":
     
     # Final message
     print("\n" + "=" * 80)
-    print("✅ SPLITS CREATED SUCCESSFULLY!")
+    print("SPLITS CREATED SUCCESSFULLY!")
     print("=" * 80)
     
-    print("\n📁 Your data is ready in:")
+    print("\nYour data is ready in:")
     print(f"   {DESTINATION / 'train'}")
     print(f"   {DESTINATION / 'val'}")
     print(f"   {DESTINATION / 'test'}")

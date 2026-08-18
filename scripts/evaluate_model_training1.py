@@ -71,7 +71,7 @@ def evaluate_model(model, test_loader, device):
     all_confidences = []
     all_probs = []
     
-    print("🔍 Evaluating model on test set...")
+    print("Evaluating model on test set...")
     print("=" * 80)
     
     with torch.no_grad():
@@ -122,7 +122,7 @@ def calculate_metrics(results, class_names):
     correct_confidence = np.mean(confidences[correct_mask])
     incorrect_confidence = np.mean(confidences[~correct_mask]) if np.sum(~correct_mask) > 0 else 0
     
-    print("\n📊 EVALUATION RESULTS")
+    print("\n EVALUATION RESULTS")
     print("=" * 80)
     print(f"Overall Accuracy: {accuracy:.4f} ({accuracy*100:.2f}%)")
     print(f"Total Test Images: {len(labels)}")
@@ -134,7 +134,7 @@ def calculate_metrics(results, class_names):
         print(f"Confidence (Incorrect): {incorrect_confidence:.4f} ({incorrect_confidence*100:.2f}%)")
     
     # Classification report
-    print("\n📋 CLASSIFICATION REPORT")
+    print("\n CLASSIFICATION REPORT")
     print("=" * 80)
     report = classification_report(labels, preds, target_names=class_names)
     print(report)
@@ -165,7 +165,7 @@ def plot_confusion_matrix(results, class_names, save_path):
     plt.xlabel('Predicted Label')
     plt.tight_layout()
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    print(f"\n📊 Confusion matrix saved to: {save_path}")
+    print(f"\n Confusion matrix saved to: {save_path}")
     plt.close()
 
 
@@ -199,7 +199,7 @@ def plot_confidence_distribution(results, save_path):
     
     plt.tight_layout()
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    print(f"📊 Confidence distribution saved to: {save_path}")
+    print(f" Confidence distribution saved to: {save_path}")
     plt.close()
 
 
@@ -258,7 +258,7 @@ def show_sample_predictions(model, test_dataset, class_names, device, save_path,
                  fontsize=16, fontweight='bold', y=0.995)
     plt.tight_layout()
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    print(f"📊 Sample predictions saved to: {save_path}")
+    print(f" Sample predictions saved to: {save_path}")
     plt.close()
 
 
@@ -282,23 +282,23 @@ def save_detailed_results(results, class_names, save_path):
     with open(save_path, 'w') as f:
         json.dump(detailed_results, f, indent=2)
     
-    print(f"📝 Detailed results saved to: {save_path}")
+    print(f" Detailed results saved to: {save_path}")
 
 
 
 if __name__ == "__main__":
     print("=" * 80)
-    print("🔍 AINAILSYS - STAGE 1 MODEL EVALUATION")
+    print(" AINAILSYS - STAGE 1 MODEL EVALUATION")
     print("=" * 80)
     print()
     
     # Check if model exists
     if not MODEL_PATH.exists():
-        print(f"❌ Model not found at: {MODEL_PATH}")
+        print(f" Model not found at: {MODEL_PATH}")
         print("   Please train the model first!")
         exit()
     
-    print(f"📂 Loading test data from: {DATA_DIR / 'test'}")
+    print(f" Loading test data from: {DATA_DIR / 'test'}")
     test_loader, test_dataset = load_test_data(DATA_DIR)
     class_names = test_dataset.classes
     
@@ -306,7 +306,7 @@ if __name__ == "__main__":
     print(f"   Test images: {len(test_dataset)}")
     print()
     
-    print(f"🤖 Loading model from: {MODEL_PATH}")
+    print(f" Loading model from: {MODEL_PATH}")
     model = load_model(MODEL_PATH, len(class_names), DEVICE)
     print(f"   Device: {DEVICE}")
     print()
@@ -318,7 +318,7 @@ if __name__ == "__main__":
     metrics = calculate_metrics(results, class_names)
     
     # Create visualizations
-    print("\n📊 Creating visualizations...")
+    print("\n Creating visualizations...")
     plot_confusion_matrix(results, class_names, 
                          OUTPUT_DIR / 'confusion_matrix.png')
     
@@ -329,7 +329,7 @@ if __name__ == "__main__":
                            OUTPUT_DIR / 'sample_predictions.png')
     
     # Save detailed results
-    print("\n💾 Saving detailed results...")
+    print("\n Saving detailed results...")
     save_detailed_results(results, class_names, 
                          OUTPUT_DIR / 'detailed_predictions.json')
     
@@ -353,16 +353,16 @@ if __name__ == "__main__":
     with open(OUTPUT_DIR / 'evaluation_summary.json', 'w') as f:
         json.dump(summary, f, indent=2)
     
-    print(f"📝 Evaluation summary saved to: {OUTPUT_DIR / 'evaluation_summary.json'}")
+    print(f" Evaluation summary saved to: {OUTPUT_DIR / 'evaluation_summary.json'}")
     
     # Final summary
     print("\n" + "=" * 80)
-    print("✅ EVALUATION COMPLETE!")
+    print(" EVALUATION COMPLETE!")
     print("=" * 80)
     
-    print(f"\n📁 Results saved in: {OUTPUT_DIR}")
+    print(f"\n Results saved in: {OUTPUT_DIR}")
     
-    print("\n💡 To see confidence scores:")
+    print("\n To see confidence scores:")
     print(f"   Open: {OUTPUT_DIR / 'detailed_predictions.json'}")
     
     print("\n" + "=" * 80)

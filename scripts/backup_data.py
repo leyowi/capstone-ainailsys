@@ -6,22 +6,16 @@ SOURCE = PROJECT_ROOT / "data" / "raw"
 DESTINATION = PROJECT_ROOT / "data" / "00_original"
 
 def copy_folder_structure(src, dst):
-    """
-    Copy entire folder structure from src to dst
-    
-    Args:
-        src: Source folder path
-        dst: Destination folder path
-    """
+
     src = Path(src)
     dst = Path(dst)
     
     if not src.exists():
-        print(f"❌ Source not found: {src}")
+        print(f"Source not found: {src}")
         return
     
-    print(f"📂 Copying from: {src}")
-    print(f"📂 Copying to:   {dst}\n")
+    print(f"Copying from: {src}")
+    print(f"Copying to:   {dst}\n")
     
     total_files = 0
     total_folders = 0
@@ -36,7 +30,7 @@ def copy_folder_structure(src, dst):
             # Create directory
             destination_path.mkdir(parents=True, exist_ok=True)
             total_folders += 1
-            print(f"📁 Created folder: {relative_path}")
+            print(f"Created folder: {relative_path}")
         
         elif item.is_file():
             # Create parent directory if needed
@@ -57,7 +51,7 @@ def verify_backup(src, dst):
     src = Path(src)
     dst = Path(dst)
     
-    print("\n🔍 Verifying backup...")
+    print("\nVerifying backup...")
     
     # Count files in source
     src_files = list(src.rglob('*'))
@@ -71,35 +65,35 @@ def verify_backup(src, dst):
     print(f"   Destination files: {dst_file_count}")
     
     if src_file_count == dst_file_count:
-        print("   ✅ File counts match!")
+        print("   File counts match!")
         return True
     else:
-        print("   ❌ File counts don't match!")
+        print("   File counts don't match!")
         return False
 
 
 
 if __name__ == "__main__":
     print("=" * 80)
-    print("💾 AINAILSYS - BACKUP RAW DATA")
+    print("AINAILSYS - BACKUP RAW DATA")
     print("=" * 80)
     print()
     
     # Check if backup already exists
     if (DESTINATION / "healthy").exists():
-        print("⚠️  Backup already exists in 00_original/")
+        print("Backup already exists in 00_original/")
         response = input("Do you want to overwrite it? (yes/no): ").strip().lower()
         
         if response != 'yes':
-            print("❌ Backup cancelled.")
+            print("Backup cancelled.")
             exit()
         else:
-            print("🗑️  Removing old backup...")
+            print("Removing old backup...")
             shutil.rmtree(DESTINATION)
-            print("   ✓ Old backup removed\n")
+            print("Old backup removed\n")
     
     # Copy data
-    print("📋 Starting backup...\n")
+    print("Starting backup...\n")
     files_copied, folders_created = copy_folder_structure(SOURCE, DESTINATION)
     
     # Verify
@@ -108,12 +102,12 @@ if __name__ == "__main__":
     # Summary
     print("\n" + "=" * 80)
     if success:
-        print("✅ BACKUP COMPLETE!")
+        print("BACKUP COMPLETE!")
     else:
-        print("⚠️  BACKUP COMPLETED WITH WARNINGS")
+        print(" BACKUP COMPLETED WITH WARNINGS")
     print("=" * 80)
     
-    print(f"\n📊 Summary:")
+    print(f"\nSummary:")
     print(f"   Files copied:    {files_copied}")
     print(f"   Folders created: {folders_created}")
     print(f"   Source:          {SOURCE}")

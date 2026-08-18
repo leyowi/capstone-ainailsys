@@ -88,9 +88,9 @@ def _migrate_csv():
             writer.writeheader()
             for row in rows:
                 writer.writerow({col: row.get(col, "") for col in CSV_COLUMNS})
-        print("✅  CSV migration complete")
+        print("CSV migration complete")
     except Exception as e:
-        print(f"⚠️  CSV migration failed: {e}")
+        print(f"CSV migration failed: {e}")
 
 def append_record(record: dict):
     ensure_csv()
@@ -106,7 +106,7 @@ def lookup_patient_by_id(patient_id: str):
         with open(DB_PATH, "r", newline="") as f:
             reader = csv.DictReader(f)
             if "Patient_ID" not in (reader.fieldnames or []):
-                print("⚠️  Patient_ID column not found in CSV — run ensure_csv() first")
+                print("Patient_ID column not found in CSV — run ensure_csv() first")
                 return None
             matches = [
                 row for row in reader
@@ -114,12 +114,12 @@ def lookup_patient_by_id(patient_id: str):
                    == patient_id.strip().lower()
             ]
         if matches:
-            print(f"✅  Returning patient found: {matches[-1].get('Name','?')}")
+            print(f"  Returning patient found: {matches[-1].get('Name','?')}")
         else:
-            print(f"🆕  No record for ID: {patient_id!r}")
+            print(f"  No record for ID: {patient_id!r}")
         return matches[-1] if matches else None
     except Exception as e:
-        print(f"⚠️  Lookup error: {e}")
+        print(f"  Lookup error: {e}")
         return None
 
 # ============================================
@@ -161,7 +161,7 @@ def detect_nail_presence(image):
     print(f"  Edges > 1.5%: {has_edges}")
     print(f"  Texture > 25: {has_texture}")
     print(f"  Brightness < 200: {not_overexposed}")
-    print(f"  {'✅ NAIL DETECTED' if has_nail else '❌ NO NAIL'}")
+    print(f"  {' NAIL DETECTED' if has_nail else '❌ NO NAIL'}")
 
     return has_nail
 
@@ -256,7 +256,7 @@ class AINAILSYSApp:
         """Text-to-speech in background thread"""
         def speak_in_background():
             try:
-                print(f"🔊 Speaking: {text}")
+                print(f" Speaking: {text}")
                 fixed_text = ". . . . " + text
                 env = os.environ.copy()
                 env['AUDIODEV'] = 'hw:2,0'
@@ -266,9 +266,9 @@ class AINAILSYSApp:
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL
                 )
-                print("✅ Speech completed")
+                print(" Speech completed")
             except Exception:
-                print("❌ Speech failed")
+                print(" Speech failed")
         threading.Thread(target=speak_in_background, daemon=True).start()
 
     def load_models(self):
@@ -365,7 +365,7 @@ class AINAILSYSApp:
                            width=SCREEN_W, height=self._osk_kh)
             self.osk.lift()
             self.osk_visible = True
-        print(f"⌨️  Keyboard shown — target: {self.osk_target}")
+        print(f"  Keyboard shown — target: {self.osk_target}")
 
     def _hide_keyboard(self, event=None):
         self._do_hide_keyboard()
@@ -375,7 +375,7 @@ class AINAILSYSApp:
             self.osk.place_forget()
             self.osk_visible = False
             self.osk_target  = None
-        print("⌨️  Keyboard hidden")
+        print("  Keyboard hidden")
 
     def _destroy_keyboard(self):
         """Called on shutdown/exit — just hide it (Frame can't be re-created)."""
@@ -883,13 +883,13 @@ class AINAILSYSApp:
             self.is_returning_patient = True
             name = record.get("Name", "")
             self.id_status_lbl.configure(
-                text=f"✅  Returning patient: {name}  —  info loaded automatically",
+                text=f"  Returning patient: {name}  —  info loaded automatically",
                 fg=COLOR_SUCCESS)
             self._populate_from_existing(record)
         else:
             self.is_returning_patient = False
             self.id_status_lbl.configure(
-                text="🆕  New patient — please fill all fields",
+                text="  New patient — please fill all fields",
                 fg=COLOR_MID)
         self._validate_patient_form()
 
@@ -966,7 +966,7 @@ class AINAILSYSApp:
             has_nail = detect_nail_presence(self.current_frame)
 
             if not has_nail:
-                print("\n🚫 NO NAIL DETECTED")
+                print("\n NO NAIL DETECTED")
                 self.last_results = None
                 self.display_no_nail_result()
             else:
@@ -1230,18 +1230,18 @@ class AINAILSYSApp:
         try:
             append_record(record)
             self.save_status_lbl.configure(
-                text="✅  Record saved to patient_records.csv", fg=COLOR_SUCCESS)
+                text="  Record saved to patient_records.csv", fg=COLOR_SUCCESS)
             self.save_btn.configure(
                 state=tk.DISABLED, bg=COLOR_MID,
-                activebackground=COLOR_MID, text="SAVED ✅"
+                activebackground=COLOR_MID, text="SAVED"
             )
             self.speak("Record saved successfully.")
-            print(f"✅ Record saved: {record}")
+            print(f" Record saved: {record}")
         except Exception as e:
             self.save_status_lbl.configure(
-                text=f"❌  Save failed: {e}", fg=COLOR_WARNING)
+                text=f"  Save failed: {e}", fg=COLOR_WARNING)
             self.speak("Error. Record could not be saved.")
-            print(f"❌ Save error: {e}")
+            print(f" Save error: {e}")
 
     # ==========================================
     # DONE → homepage  /  RE-SCAN → preview (keeps patient data)

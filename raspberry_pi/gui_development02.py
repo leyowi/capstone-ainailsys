@@ -111,7 +111,7 @@ def detect_nail_presence(image):
     print(f"  Edges > 1.5%: {has_edges}")
     print(f"  Texture > 25: {has_texture}")
     print(f"  Brightness < 200: {not_overexposed}")
-    print(f"  {'✅ NAIL DETECTED' if has_nail else '❌ NO NAIL'}")
+    print(f"  {'NAIL DETECTED' if has_nail else '❌ NO NAIL'}")
 
     return has_nail
 
@@ -197,7 +197,7 @@ class AINAILSYSApp:
         """Text-to-speech in background thread"""
         def speak_in_background():
             try:
-                print(f"🔊 Speaking: {text}")
+                print(f"Speaking: {text}")
                 fixed_text = ". . . . " + text
                 env = os.environ.copy()
                 env['AUDIODEV'] = 'hw:2,0'
@@ -207,9 +207,9 @@ class AINAILSYSApp:
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL
                 )
-                print("✅ Speech completed")
+                print("Speech completed")
             except Exception:
-                print("❌ Speech failed")
+                print("Speech failed")
         threading.Thread(target=speak_in_background, daemon=True).start()
 
     def load_models(self):
@@ -738,7 +738,7 @@ class AINAILSYSApp:
             has_nail = detect_nail_presence(self.current_frame)
 
             if not has_nail:
-                print("\n🚫 NO NAIL DETECTED")
+                print("\nNO NAIL DETECTED")
                 self.last_results = None
                 self.display_no_nail_result()
             else:
@@ -1001,18 +1001,18 @@ class AINAILSYSApp:
         try:
             append_record(record)
             self.save_status_lbl.configure(
-                text="✅  Record saved to patient_records.csv", fg=COLOR_SUCCESS)
+                text="  Record saved to patient_records.csv", fg=COLOR_SUCCESS)
             self.save_btn.configure(
                 state=tk.DISABLED, bg=COLOR_MID,
                 activebackground=COLOR_MID, text="SAVED ✅"
             )
             self.speak("Record saved successfully.")
-            print(f"✅ Record saved: {record}")
+            print(f" Record saved: {record}")
         except Exception as e:
             self.save_status_lbl.configure(
-                text=f"❌  Save failed: {e}", fg=COLOR_WARNING)
+                text=f"  Save failed: {e}", fg=COLOR_WARNING)
             self.speak("Error. Record could not be saved.")
-            print(f"❌ Save error: {e}")
+            print(f" Save error: {e}")
 
     # ==========================================
     # NEW SCAN → homepage

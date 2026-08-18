@@ -57,7 +57,7 @@ def export_to_onnx(model, onnx_path, model_name, num_classes):
         model_name: Name for display
         num_classes: Number of output classes
     """
-    print(f"\n🔄 Converting {model_name} to ONNX...")
+    print(f"\n Converting {model_name} to ONNX...")
     print("-" * 80)
     
     # Create dummy input (batch_size=1, channels=3, height=224, width=224)
@@ -109,7 +109,7 @@ def test_onnx_inference(onnx_path, model_name, class_names):
         model_name: Name for display
         class_names: List of class names
     """
-    print(f"\n🧪 Testing {model_name} ONNX inference...")
+    print(f"\n Testing {model_name} ONNX inference...")
     print("-" * 80)
     
     # Create ONNX Runtime session
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     print("=" * 80)
     print()
     
-    print("📋 Export Configuration:")
+    print(" Export Configuration:")
     print(f"   Stage 1 PyTorch: {STAGE1_MODEL_PATH}")
     print(f"   Stage 2 PyTorch: {STAGE2_MODEL_PATH}")
     print(f"   Output directory: {DEPLOYMENT_DIR}")
@@ -212,7 +212,7 @@ if __name__ == "__main__":
     print("=" * 80)
     
     # Load PyTorch model
-    print("\n📂 Loading Stage 1 PyTorch model...")
+    print("\n Loading Stage 1 PyTorch model...")
     stage1_model = load_pytorch_model(STAGE1_MODEL_PATH, STAGE1_NUM_CLASSES)
     print("   ✓ Model loaded successfully")
     
@@ -236,7 +236,7 @@ if __name__ == "__main__":
     print("=" * 80)
     
     # Load PyTorch model
-    print("\n📂 Loading Stage 2 PyTorch model...")
+    print("\n Loading Stage 2 PyTorch model...")
     stage2_model = load_pytorch_model(STAGE2_MODEL_PATH, STAGE2_NUM_CLASSES)
     print("   ✓ Model loaded successfully")
     
@@ -256,14 +256,14 @@ if __name__ == "__main__":
     
     
     print("\n" + "=" * 80)
-    print("✅ EXPORT COMPLETE!")
+    print(" EXPORT COMPLETE!")
     print("=" * 80)
     
-    print(f"\n📦 Exported Models:")
+    print(f"\n Exported Models:")
     print(f"   Stage 1: {STAGE1_ONNX_PATH}")
     print(f"   Stage 2: {STAGE2_ONNX_PATH}")
     
-    print(f"\n📄 Metadata Files:")
+    print(f"\n Metadata Files:")
     print(f"   Stage 1: {STAGE1_ONNX_PATH.with_suffix('.json')}")
     print(f"   Stage 2: {STAGE2_ONNX_PATH.with_suffix('.json')}")
     

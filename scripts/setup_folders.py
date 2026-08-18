@@ -77,4 +77,4 @@ for folder in FOLDERS:
     full_path.mkdir(parents=True, exist_ok=True)
     print(f"✓ {folder}")
 
-print(f"\n✅ Done! Created {len(FOLDERS)} folders")
+print(f"\nDone. Created {len(FOLDERS)} folders")

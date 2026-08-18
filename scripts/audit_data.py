@@ -10,10 +10,10 @@ def count_files_detailed(folder_path):
     folder_path = Path(folder_path)
     
     if not folder_path.exists():
-        print(f"❌ Folder not found: {folder_path}")
+        print(f"Folder not found: {folder_path}")
         return
     
-    print(f"\n📂 Scanning: {folder_path}")
+    print(f"\nScanning: {folder_path}")
     print("=" * 80)
     
     # Get all files
@@ -31,7 +31,7 @@ def count_files_detailed(folder_path):
         extensions[ext].append(file.name)
     
     # Print results
-    print(f"\n📊 Total files found: {len(all_files)}")
+    print(f"\nTotal files found: {len(all_files)}")
     print("\nBreakdown by extension:")
     print("-" * 80)
     
@@ -55,10 +55,10 @@ def scan_all_folders(raw_path):
     raw_path = Path(raw_path)
     
     if not raw_path.exists():
-        print(f"❌ Raw folder not found: {raw_path}")
+        print(f"Raw folder not found: {raw_path}")
         return
     
-    print("🔍 DETAILED FILE COUNT REPORT")
+    print("DETAILED FILE COUNT REPORT")
     print("=" * 80)
     
     total = 0
@@ -68,9 +68,9 @@ def scan_all_folders(raw_path):
     if healthy_path.exists():
         count = count_files_detailed(healthy_path)
         total += count
-        print(f"\n✅ Healthy total: {count}")
+        print(f"\nHealthy total: {count}")
     else:
-        print(f"\n❌ 'healthy' folder not found")
+        print(f"\n'healthy' folder not found")
     
     # Check iron folder
     iron_path = raw_path / "iron"
@@ -86,14 +86,14 @@ def scan_all_folders(raw_path):
             if subfolder_path.exists():
                 count = count_files_detailed(subfolder_path)
                 iron_total += count
-                print(f"\n✅ {subfolder} total: {count}")
+                print(f"\n{subfolder} total: {count}")
             else:
-                print(f"\n❌ '{subfolder}' subfolder not found in iron/")
+                print(f"\n'{subfolder}' subfolder not found in iron/")
         
         total += iron_total
-        print(f"\n📦 IRON GRAND TOTAL: {iron_total}")
+        print(f"\nIRON GRAND TOTAL: {iron_total}")
     else:
-        print(f"\n❌ 'iron' folder not found")
+        print(f"\n'iron' folder not found")
     
     # Check folate folder
     folate_path = raw_path / "folate"
@@ -109,14 +109,14 @@ def scan_all_folders(raw_path):
             if subfolder_path.exists():
                 count = count_files_detailed(subfolder_path)
                 folate_total += count
-                print(f"\n✅ {subfolder} total: {count}")
+                print(f"\n{subfolder} total: {count}")
             else:
-                print(f"\n❌ '{subfolder}' subfolder not found in folate/")
+                print(f"\n'{subfolder}' subfolder not found in folate/")
         
         total += folate_total
-        print(f"\n📦 FOLATE GRAND TOTAL: {folate_total}")
+        print(f"\nFOLATE GRAND TOTAL: {folate_total}")
     else:
-        print(f"\n❌ 'folate' folder not found")
+        print(f"\n'folate' folder not found")
     
     # Check b12 folder
     b12_path = raw_path / "b12"
@@ -132,20 +132,20 @@ def scan_all_folders(raw_path):
             if subfolder_path.exists():
                 count = count_files_detailed(subfolder_path)
                 b12_total += count
-                print(f"\n✅ {subfolder} total: {count}")
+                print(f"\n{subfolder} total: {count}")
             else:
-                print(f"\n❌ '{subfolder}' subfolder not found in b12/")
+                print(f"\n'{subfolder}' subfolder not found in b12/")
         
         total += b12_total
-        print(f"\n📦 B12 GRAND TOTAL: {b12_total}")
+        print(f"\nB12 GRAND TOTAL: {b12_total}")
     else:
-        print(f"\n❌ 'b12' folder not found")
+        print(f"\n'b12' folder not found")
     
     # Final summary
     print("\n" + "=" * 80)
-    print("🎯 FINAL SUMMARY")
+    print("FINAL SUMMARY")
     print("=" * 80)
-    print(f"\n🔢 TOTAL FILES ACROSS ALL FOLDERS: {total}")
+    print(f"\nTOTAL FILES ACROSS ALL FOLDERS: {total}")
     print("\nExpected counts:")
     print("  healthy: 685")
     print("  spooning: 336")

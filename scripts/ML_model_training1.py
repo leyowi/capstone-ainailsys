@@ -237,7 +237,7 @@ def train_model(model, dataloaders, dataset_sizes, criterion, optimizer,
                     'accuracy': epoch_acc,
                 }, checkpoint_path)
                 
-                print(f'   ✅ New best model saved! Acc: {epoch_acc:.4f}')
+                print(f'    New best model saved! Acc: {epoch_acc:.4f}')
     
     # Training complete
     time_elapsed = time.time() - since
@@ -284,26 +284,26 @@ def plot_training_history(history, save_path):
     
     plt.tight_layout()
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    print(f'\n📊 Training curves saved to: {save_path}')
+    print(f'\n Training curves saved to: {save_path}')
     plt.close()
 
 
 if __name__ == "__main__":
     print("=" * 80)
-    print("🤖 AINAILSYS - STAGE 1 MODEL TRAINING")
+    print(" AINAILSYS - STAGE 1 MODEL TRAINING")
     print("   Binary Classification: Healthy vs Anemic")
     print("=" * 80)
     print()
     
     # Check GPU
-    print(f"🖥️  Device: {DEVICE}")
+    print(f"  Device: {DEVICE}")
     if torch.cuda.is_available():
         print(f"   GPU: {torch.cuda.get_device_name(0)}")
         print(f"   Memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.2f} GB")
     print()
     
     # Load data
-    print("📂 Loading data...")
+    print(" Loading data...")
     dataloaders, dataset_sizes, class_names = load_data(DATA_DIR, BATCH_SIZE)
     print(f"   Classes: {class_names}")
     print(f"   Train: {dataset_sizes['train']} images")
@@ -311,7 +311,7 @@ if __name__ == "__main__":
     print()
     
     # Create model
-    print("🏗️  Creating model...")
+    print("  Creating model...")
     model = create_model(num_classes=len(class_names))
     model = model.to(DEVICE)
     print(f"   Model: ResNet18")
@@ -337,13 +337,13 @@ if __name__ == "__main__":
     # Save final model
     final_model_path = MODEL_DIR / 'best_model.pth'
     torch.save(model.state_dict(), final_model_path)
-    print(f'\n💾 Final model saved to: {final_model_path}')
+    print(f'\n Final model saved to: {final_model_path}')
     
     # Save training history
     history_path = OUTPUT_DIR / 'training_history.json'
     with open(history_path, 'w') as f:
         json.dump(history, f, indent=2)
-    print(f'📊 Training history saved to: {history_path}')
+    print(f' Training history saved to: {history_path}')
     
     # Plot training curves
     plot_path = OUTPUT_DIR / 'training_curves.png'
@@ -368,18 +368,18 @@ if __name__ == "__main__":
     info_path = OUTPUT_DIR / 'training_info.json'
     with open(info_path, 'w') as f:
         json.dump(info, f, indent=2)
-    print(f'📝 Training info saved to: {info_path}')
+    print(f' Training info saved to: {info_path}')
     
     # Final summary
     print("\n" + "=" * 80)
-    print("✅ STAGE 1 TRAINING COMPLETE!")
+    print(" STAGE 1 TRAINING COMPLETE!")
     print("=" * 80)
-    print(f"\n📊 Final Results:")
+    print(f"\n Final Results:")
     print(f"   Best Validation Accuracy: {max(history['val_acc']):.4f} ({max(history['val_acc'])*100:.2f}%)")
     print(f"   Final Train Accuracy: {history['train_acc'][-1]:.4f}")
     print(f"   Final Val Accuracy: {history['val_acc'][-1]:.4f}")
     
-    print(f"\n💾 Saved Files:")
+    print(f"\n Saved Files:")
     print(f"   Model: {final_model_path}")
     print(f"   History: {history_path}")
     print(f"   Curves: {plot_path}")

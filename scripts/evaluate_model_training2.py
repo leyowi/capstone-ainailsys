@@ -82,7 +82,7 @@ def evaluate_model(model, test_loader, device):
     all_confidences = []
     all_probs = []
     
-    print("🔍 Evaluating model on test set...")
+    print(" Evaluating model on test set...")
     print("=" * 80)
     
     with torch.no_grad():
@@ -141,7 +141,7 @@ def calculate_metrics(results, class_names):
             class_acc = np.mean(preds[class_mask] == labels[class_mask])
             per_class_acc[class_name] = class_acc
     
-    print("\n📊 EVALUATION RESULTS")
+    print("\n EVALUATION RESULTS")
     print("=" * 80)
     print(f"Overall Accuracy: {accuracy:.4f} ({accuracy*100:.2f}%)")
     print(f"Total Test Images: {len(labels)}")
@@ -153,14 +153,14 @@ def calculate_metrics(results, class_names):
         print(f"Confidence (Incorrect): {incorrect_confidence:.4f} ({incorrect_confidence*100:.2f}%)")
     
     # Per-class accuracy
-    print("\n📋 PER-CLASS ACCURACY")
+    print("\n PER-CLASS ACCURACY")
     print("=" * 80)
     for class_name, acc in sorted(per_class_acc.items(), key=lambda x: x[1], reverse=True):
         deficiency = ABNORMALITY_TO_DEFICIENCY.get(class_name, 'Unknown')
         print(f"{class_name:15} {acc:.4f} ({acc*100:.2f}%)  → {deficiency}")
     
     # Classification report
-    print("\n📋 DETAILED CLASSIFICATION REPORT")
+    print("\n DETAILED CLASSIFICATION REPORT")
     print("=" * 80)
     report = classification_report(labels, preds, target_names=class_names, digits=4)
     print(report)
@@ -189,14 +189,14 @@ def calculate_deficiency_accuracy(results, class_names):
     deficiency_correct = sum(p == l for p, l in zip(pred_deficiencies, label_deficiencies))
     deficiency_acc = deficiency_correct / len(labels)
     
-    print("\n📊 DEFICIENCY-LEVEL ACCURACY")
+    print("\n DEFICIENCY-LEVEL ACCURACY")
     print("=" * 80)
     print(f"Deficiency Accuracy: {deficiency_acc:.4f} ({deficiency_acc*100:.2f}%)")
     print(f"Correct Deficiency: {deficiency_correct}/{len(labels)}")
 
     
     # Per-deficiency breakdown
-    print("\n📋 Per-Deficiency Breakdown:")
+    print("\n Per-Deficiency Breakdown:")
     deficiency_types = list(set(ABNORMALITY_TO_DEFICIENCY.values()))
     
     for deficiency in sorted(deficiency_types):
@@ -230,7 +230,7 @@ def plot_confusion_matrix(results, class_names, save_path):
     plt.yticks(rotation=0)
     plt.tight_layout()
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    print(f"\n📊 Confusion matrix saved to: {save_path}")
+    print(f"\n Confusion matrix saved to: {save_path}")
     plt.close()
 
 
@@ -282,7 +282,7 @@ def plot_per_class_performance(metrics, save_path):
     
     plt.tight_layout()
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    print(f"📊 Per-class performance saved to: {save_path}")
+    print(f" Per-class performance saved to: {save_path}")
     plt.close()
 
 
@@ -317,7 +317,7 @@ def plot_confidence_distribution(results, save_path):
     
     plt.tight_layout()
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
-    print(f"📊 Confidence distribution saved to: {save_path}")
+    print(f" Confidence distribution saved to: {save_path}")
     plt.close()
 
 
@@ -347,29 +347,29 @@ def save_detailed_results(results, class_names, save_path):
     with open(save_path, 'w') as f:
         json.dump(detailed_results, f, indent=2)
     
-    print(f"📝 Detailed results saved to: {save_path}")
+    print(f" Detailed results saved to: {save_path}")
 
 
 if __name__ == "__main__":
     print("=" * 80)
-    print("🔍 AINAILSYS - STAGE 2 MODEL EVALUATION")
+    print(" AINAILSYS - STAGE 2 MODEL EVALUATION")
     print("   7-Class Abnormality Classifier")
     print("=" * 80)
     print()
     
     # Check if model exists
     if not MODEL_PATH.exists():
-        print(f"❌ Model not found at: {MODEL_PATH}")
+        print(f" Model not found at: {MODEL_PATH}")
         print("   Please train the model first!")
         exit()
     
     # Check if data exists
     if not DATA_DIR.exists():
-        print(f"❌ Data directory not found: {DATA_DIR}")
+        print(f" Data directory not found: {DATA_DIR}")
         print("   Please run: python scripts/09a_prepare_stage2_data.py")
         exit()
     
-    print(f"📂 Loading test data from: {DATA_DIR / 'test'}")
+    print(f" Loading test data from: {DATA_DIR / 'test'}")
     test_loader, test_dataset = load_test_data(DATA_DIR)
     class_names = test_dataset.classes
     
@@ -378,14 +378,14 @@ if __name__ == "__main__":
     
     # Verify no 'healthy' class
     if 'healthy' in class_names:
-        print("\n❌ ERROR: 'healthy' found in test data!")
+        print("\n ERROR: 'healthy' found in test data!")
         print("   Stage 2 should only have 7 abnormality classes.")
         exit()
     
     print(f"   ✓ Correct! Only abnormality classes (no healthy)")
     print()
     
-    print(f"🤖 Loading model from: {MODEL_PATH}")
+    print(f" Loading model from: {MODEL_PATH}")
     model = load_model(MODEL_PATH, len(class_names), DEVICE)
     print(f"   Device: {DEVICE}")
     print()
@@ -401,7 +401,7 @@ if __name__ == "__main__":
     metrics['deficiency_accuracy'] = deficiency_acc
     
     # Create visualizations
-    print("\n📊 Creating visualizations...")
+    print("\n Creating visualizations...")
     plot_confusion_matrix(results, class_names, 
                          OUTPUT_DIR / 'confusion_matrix.png')
     
@@ -412,7 +412,7 @@ if __name__ == "__main__":
                                 OUTPUT_DIR / 'confidence_distribution.png')
     
     # Save detailed results
-    print("\n💾 Saving detailed results...")
+    print("\n Saving detailed results...")
     save_detailed_results(results, class_names, 
                          OUTPUT_DIR / 'detailed_predictions.json')
     
@@ -430,16 +430,16 @@ if __name__ == "__main__":
     with open(OUTPUT_DIR / 'evaluation_summary.json', 'w') as f:
         json.dump(summary, f, indent=2)
     
-    print(f"📝 Evaluation summary saved to: {OUTPUT_DIR / 'evaluation_summary.json'}")
+    print(f" Evaluation summary saved to: {OUTPUT_DIR / 'evaluation_summary.json'}")
     
     # Final summary
     print("\n" + "=" * 80)
-    print("✅ EVALUATION COMPLETE!")
+    print(" EVALUATION COMPLETE!")
     print("=" * 80)
     
-    print(f"\n📁 Results saved in: {OUTPUT_DIR}")
+    print(f"\n Results saved in: {OUTPUT_DIR}")
     
-    print("\n📊 KEY METRICS:")
+    print("\n KEY METRICS:")
     print(f"   Abnormality Accuracy: {metrics['accuracy']*100:.2f}%")
     print(f"   Deficiency Accuracy:  {deficiency_acc*100:.2f}%")
     print(f"   Average Confidence:   {metrics['avg_confidence']*100:.2f}%")

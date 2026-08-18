@@ -108,7 +108,7 @@ def process_class(class_name, src_path, dst_path, current_count, target_count, c
     if len(source_images) == 0:
         return {'copied': 0, 'augmented': 0}
     
-    print(f"\n📁 {class_name}:")
+    print(f"\n{class_name}:")
     print(f"   Current: {current_count} images")
     print(f"   Target:  {target_count} images")
     
@@ -119,13 +119,13 @@ def process_class(class_name, src_path, dst_path, current_count, target_count, c
         shutil.copy2(img_path, dst_img_path)
     
     copied_count = len(source_images)
-    print(f"   ✓ Copied {copied_count} original images")
+    print(f"   Copied {copied_count} original images")
     
     # Calculate how many augmented images we need
     needed = target_count - current_count
     
     if needed <= 0:
-        print(f"   ✓ No augmentation needed (already at target)")
+        print(f"   No augmentation needed (already at target)")
         return {'copied': copied_count, 'augmented': 0}
     
     print(f"   Creating {needed} augmented images...")
@@ -173,7 +173,7 @@ def augment_dataset(src, dst, target_count, config):
     total_copied = 0
     total_augmented = 0
     
-    print("🔄 Augmenting dataset...")
+    print("Augmenting dataset...")
     print("=" * 80)
     
     for class_folder in sorted(class_folders):
@@ -210,7 +210,7 @@ def verify_augmentation(dst):
 
     dst = Path(dst)
     
-    print("\n🔍 Verifying augmentation...")
+    print("\nVerifying augmentation...")
     print("-" * 80)
     
     counts = {}
@@ -227,12 +227,12 @@ def verify_augmentation(dst):
 
 if __name__ == "__main__":
     print("=" * 80)
-    print("🔄 AINAILSYS - DATA AUGMENTATION")
+    print("AINAILSYS - DATA AUGMENTATION")
     print("=" * 80)
     print()
     
     # Show configuration
-    print("⚙️  Configuration:")
+    print("Configuration:")
     print(f"   Source:       {SOURCE}")
     print(f"   Destination:  {DESTINATION}")
     print(f"   Target count: {TARGET_COUNT} images per class")
@@ -252,15 +252,15 @@ if __name__ == "__main__":
     
     # Summary
     print("\n" + "=" * 80)
-    print("✅ AUGMENTATION COMPLETE!")
+    print("AUGMENTATION COMPLETE!")
     print("=" * 80)
     
-    print(f"\n📊 Statistics:")
+    print(f"\n Statistics:")
     print(f"   Original images copied: {stats['total_copied']}")
     print(f"   Augmented images added: {stats['total_augmented']}")
     print(f"   Total final images:     {stats['total_final']}")
     
-    print(f"\n📁 Final counts per class:")
+    print(f"\n Final counts per class:")
     for class_name, count in sorted(final_counts.items()):
         print(f"   {class_name:15} {count:4} images")
     

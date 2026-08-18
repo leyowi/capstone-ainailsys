@@ -64,7 +64,7 @@ def convert_to_jpg(image_path, output_path, target_size=None, quality=95):
         return True
         
     except Exception as e:
-        print(f"   ❌ Error converting {image_path.name}: {e}")
+        print(f"   Error converting {image_path.name}: {e}")
         return False
 
 
@@ -91,7 +91,7 @@ def reorganize_and_clean(src, dst, reorganize_map, target_size=None):
         'by_class': {}
     }
     
-    print("🔄 Reorganizing and cleaning data...\n")
+    print(" Reorganizing and cleaning data...\n")
     
     # Process each mapping
     for source_path, dest_folder in reorganize_map.items():
@@ -102,10 +102,10 @@ def reorganize_and_clean(src, dst, reorganize_map, target_size=None):
         dest_full.mkdir(parents=True, exist_ok=True)
         
         if not source_full.exists():
-            print(f"⚠️  Skipping {source_path} - folder not found")
+            print(f"  Skipping {source_path} - folder not found")
             continue
         
-        print(f"📁 Processing: {source_path} → {dest_folder}")
+        print(f" Processing: {source_path} → {dest_folder}")
         
         # Count files in source
         files = [f for f in source_full.iterdir() if f.is_file()]
@@ -140,9 +140,9 @@ def reorganize_and_clean(src, dst, reorganize_map, target_size=None):
             'failed': failed_count
         }
         
-        print(f"   ✅ Completed: {success_count}/{total_files} successful")
+        print(f"    Completed: {success_count}/{total_files} successful")
         if failed_count > 0:
-            print(f"   ⚠️  Failed: {failed_count} files")
+            print(f"     Failed: {failed_count} files")
         print()
     
     return stats
@@ -161,7 +161,7 @@ def verify_reorganization(dst, expected_counts):
     """
     dst = Path(dst)
     
-    print("🔍 Verifying reorganization...\n")
+    print(" Verifying reorganization...\n")
     
     all_match = True
     
@@ -169,16 +169,16 @@ def verify_reorganization(dst, expected_counts):
         class_path = dst / class_name
         
         if not class_path.exists():
-            print(f"   ❌ {class_name}: Folder not found")
+            print(f"    {class_name}: Folder not found")
             all_match = False
             continue
         
         actual = len(list(class_path.glob('*.jpg')))
         
         if actual == expected:
-            print(f"   ✅ {class_name}: {actual} files (matches expected)")
+            print(f"    {class_name}: {actual} files (matches expected)")
         else:
-            print(f"   ⚠️  {class_name}: {actual} files (expected {expected})")
+            print(f"     {class_name}: {actual} files (expected {expected})")
             all_match = False
     
     return all_match
@@ -186,12 +186,12 @@ def verify_reorganization(dst, expected_counts):
 
 if __name__ == "__main__":
     print("=" * 80)
-    print("🗂️  AINAILSYS - REORGANIZE & CLEAN DATA")
+    print("  AINAILSYS - REORGANIZE & CLEAN DATA")
     print("=" * 80)
     print()
     
     # Show configuration
-    print("⚙️  Configuration:")
+    print("  Configuration:")
     print(f"   Source:       {SOURCE}")
     print(f"   Destination:  {DESTINATION}")
     print(f"   Target size:  {TARGET_SIZE if TARGET_SIZE else 'Keep original'}")
@@ -200,11 +200,11 @@ if __name__ == "__main__":
     
     # Check if destination exists
     if any(DESTINATION.iterdir()) if DESTINATION.exists() else False:
-        print("⚠️  01_cleaned/ folder is not empty")
+        print("  01_cleaned/ folder is not empty")
         response = input("Do you want to continue? (yes/no): ").strip().lower()
         
         if response != 'yes':
-            print("❌ Operation cancelled.")
+            print(" Operation cancelled.")
             exit()
         print()
     
@@ -229,17 +229,17 @@ if __name__ == "__main__":
     # Summary
     print("\n" + "=" * 80)
     if stats['total_failed'] == 0 and verified:
-        print("✅ REORGANIZATION COMPLETE!")
+        print(" REORGANIZATION COMPLETE!")
     else:
-        print("⚠️  REORGANIZATION COMPLETED WITH WARNINGS")
+        print("  REORGANIZATION COMPLETED WITH WARNINGS")
     print("=" * 80)
     
-    print(f"\n📊 Statistics:")
+    print(f"\n Statistics:")
     print(f"   Total files processed: {stats['total_processed']}")
     print(f"   Successful:            {stats['total_success']}")
     print(f"   Failed:                {stats['total_failed']}")
     
-    print(f"\n📁 By class:")
+    print(f"\n By class:")
     for class_name, class_stats in stats['by_class'].items():
         print(f"   {class_name:15} {class_stats['success']:4} files")
 

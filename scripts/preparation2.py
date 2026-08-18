@@ -35,17 +35,17 @@ def prepare_stage2_data(src, dst, classes):
     
     stats = {}
     
-    print("📂 Preparing Stage 2 data (7 abnormalities only)...")
+    print(" Preparing Stage 2 data (7 abnormalities only)...")
     print("=" * 80)
     
     for split in ['train', 'val', 'test']:
-        print(f"\n📁 Processing {split.upper()} split:")
+        print(f"\n Processing {split.upper()} split:")
         
         src_split = src / split
         dst_split = dst / split
         
         if not src_split.exists():
-            print(f"   ⚠️  {split} folder not found, skipping")
+            print(f"     {split} folder not found, skipping")
             continue
         
         split_stats = {}
@@ -57,7 +57,7 @@ def prepare_stage2_data(src, dst, classes):
             dst_class = dst_split / class_name
             
             if not src_class.exists():
-                print(f"   ⚠️  {class_name} not found, skipping")
+                print(f"     {class_name} not found, skipping")
                 continue
             
             # Create destination
@@ -86,21 +86,21 @@ def verify_data(dst):
     """Verify the prepared data"""
     dst = Path(dst)
     
-    print("\n🔍 Verifying Stage 2 data...")
+    print("\n Verifying Stage 2 data...")
     print("=" * 80)
     
     for split in ['train', 'val', 'test']:
         split_path = dst / split
         
         if not split_path.exists():
-            print(f"⚠️  {split} folder not found")
+            print(f"  {split} folder not found")
             continue
         
-        print(f"\n📂 {split.upper()}:")
+        print(f"\n {split.upper()}:")
         
         # Check for healthy (should NOT exist)
         if (split_path / 'healthy').exists():
-            print("   ❌ ERROR: 'healthy' folder found! (should not be here)")
+            print("    ERROR: 'healthy' folder found! (should not be here)")
         else:
             print("   ✓ No 'healthy' folder (correct!)")
         
@@ -109,17 +109,17 @@ def verify_data(dst):
         print(f"   ✓ Number of classes: {len(class_folders)}")
         
         if len(class_folders) != 7:
-            print(f"   ⚠️  Expected 7 classes, found {len(class_folders)}")
+            print(f"     Expected 7 classes, found {len(class_folders)}")
 
 
 
 if __name__ == "__main__":
     print("=" * 80)
-    print("📂 AINAILSYS - PREPARE STAGE 2 DATA (7 CLASSES ONLY)")
+    print(" AINAILSYS - PREPARE STAGE 2 DATA (7 CLASSES ONLY)")
     print("=" * 80)
     print()
     
-    print("⚙️  Configuration:")
+    print("  Configuration:")
     print(f"   Source:      {SOURCE}")
     print(f"   Destination: {DESTINATION}")
     print(f"   Classes to include:")
@@ -131,14 +131,14 @@ if __name__ == "__main__":
     
     # Check if destination exists
     if DESTINATION.exists() and any(DESTINATION.iterdir()):
-        print("⚠️  Stage 2 data folder already exists")
+        print("  Stage 2 data folder already exists")
         response = input("Do you want to recreate it? (yes/no): ").strip().lower()
         
         if response != 'yes':
-            print("❌ Operation cancelled.")
+            print(" Operation cancelled.")
             exit()
         
-        print("🗑️  Removing old data...")
+        print("  Removing old data...")
         shutil.rmtree(DESTINATION)
         print("   ✓ Removed\n")
     
@@ -150,10 +150,10 @@ if __name__ == "__main__":
     
     # Summary
     print("\n" + "=" * 80)
-    print("✅ STAGE 2 DATA READY!")
+    print(" STAGE 2 DATA READY!")
     print("=" * 80)
     
-    print("\n📊 Summary:")
+    print("\n Summary:")
     total_train = sum(stats['train'].values())
     total_val = sum(stats['val'].values())
     total_test = sum(stats['test'].values())

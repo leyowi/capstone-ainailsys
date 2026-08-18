@@ -42,14 +42,14 @@ DEFICIENCY_MAP = {
 # ============================================
 
 print("=" * 80)
-print("🔍 AINAILSYS - Camera Inference System")
+print("AINAILSYS - Camera Inference System")
 print("=" * 80)
 print()
 
-print("📦 Loading models...")
+print("Loading models...")
 stage1_session = ort.InferenceSession(str(STAGE1_MODEL))
 stage2_session = ort.InferenceSession(str(STAGE2_MODEL))
-print("✅ Models loaded successfully!")
+print("Models loaded successfully!")
 print()
 
 # ============================================
@@ -196,7 +196,7 @@ def main():
     cap = cv2.VideoCapture(0)
     
     if not cap.isOpened():
-        print("❌ Error: Could not open webcam!")
+        print("Error: Could not open webcam!")
         print("   Make sure USB webcam is connected")
         return
     
@@ -204,10 +204,10 @@ def main():
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     
-    print("✅ Webcam opened successfully!")
+    print("Webcam opened successfully!")
     print()
     print("=" * 80)
-    print("📸 INSTRUCTIONS:")
+    print("INSTRUCTIONS:")
     print("   - Position fingernail in front of camera")
     print("   - Press SPACE to capture and analyze")
     print("   - Press Q to quit")
@@ -219,7 +219,7 @@ def main():
         ret, frame = cap.read()
         
         if not ret:
-            print("❌ Failed to capture frame")
+            print("Failed to capture frame")
             break
         
         # Display frame
@@ -234,26 +234,26 @@ def main():
         
         elif key == ord(' '):  # Space bar
             print("\n" + "=" * 80)
-            print("🔍 ANALYZING IMAGE...")
+            print("ANALYZING IMAGE...")
             print("=" * 80)
             
             # Run analysis
             results = analyze_nail(frame)
             
             # Display results
-            print(f"\n📊 STAGE 1 RESULTS:")
+            print(f"\nSTAGE 1 RESULTS:")
             print(f"   Classification: {results['stage1']['prediction'].upper()}")
             print(f"   Confidence: {results['stage1']['confidence']*100:.2f}%")
             print(f"   Inference time: {results['stage1_time']:.1f} ms")
             
             if 'stage2' in results:
-                print(f"\n📊 STAGE 2 RESULTS:")
+                print(f"\nSTAGE 2 RESULTS:")
                 print(f"   Abnormality: {results['stage2']['abnormality']}")
                 print(f"   Deficiency: {results['stage2']['deficiency']}")
                 print(f"   Confidence: {results['stage2']['confidence']*100:.2f}%")
                 print(f"   Inference time: {results['stage2_time']:.1f} ms")
             
-            print(f"\n⏱️  PERFORMANCE:")
+            print(f"\nPERFORMANCE:")
             print(f"   Preprocessing: {results['preprocessing_time']:.1f} ms")
             print(f"   Total time: {results['total_time']:.1f} ms")
             
@@ -264,7 +264,7 @@ def main():
     # Cleanup
     cap.release()
     cv2.destroyAllWindows()
-    print("\n✅ Camera released. Goodbye!")
+    print("\nCamera released. Goodbye!")
 
 # ============================================
 # RUN
